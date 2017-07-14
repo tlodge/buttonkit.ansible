@@ -34,4 +34,25 @@
       api_token={{ do_token }}
     register: droplet_one
     
-  - debug: msg="IP is {{ droplet_one.droplet.ip_address }}"
+  #add this new host to the just_created group
+  - name: add new droplet to inventory
+    add_host : > 
+      name="{{ droplet_one.droplet.ip_address }}"
+      groups=just_created
+      ansible_ssh_host="{{ droplet_one.droplet.ip_address }}"
+      ansible_ssh_user=root
+      ansible_ssh_private_key_file="~/.ssh/id_rsa"
+
+  - name: pause for a bit
+    pause : >
+      seconds=30
+
+- hosts: just_created
+  
+  remote_user: root
+
+  tasks:
+   - include: tasks/docker.yml
+
+  handlers:
+    - include: handlers/site.yml

@@ -1,0 +1,15 @@
+---
+
+  - name: "pull latest docker file"
+    command: git clone https://github.com/tlodge/buttonkit.yml.git
+
+  - name: "update docker containers"
+    command: docker-compose pull
+    args:
+      chdir: /root/buttonkit.yml
+
+  - name: "restart docker containers"
+    command: docker-compose up -d
+    args:
+      chdir: /root/buttonkit.yml
+
